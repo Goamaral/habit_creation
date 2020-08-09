@@ -1,0 +1,29 @@
+FROM ruby:2.7.2-alpine3.12
+
+ENV APP_PATH /project
+ENV BUNDLE_PATH "${APP_PATH}/vendor/bundle"
+ENV BUNDLE_BIN "${BUNDLE_PATH}/ruby/2.7.0/bin"
+ENV PATH "${PATH}:${BUNDLE_BIN}"
+ENV BUNDLE_JOBS 4
+WORKDIR $APP_PATH
+
+RUN apk add --update make g++ bash zsh git openssh postgresql-dev nodejs npm \
+    && apk add --update micro --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
+    && echo "user:x:1000:100::/project/docker/development/home:/bin/zsh" >> /etc/passwd \
+    && gem install bundler
+
+COPY Gemfile $APP_PATH
+COPY Gemfile.lock $APP_PATH
+COPY vendor/bundle ${APP_PATH}/vendor/bundle
+RUN bundle install
+
+COPY package.json $APP_PATH
+COPY package-lock.json $APP_PATH
+COPY node_modules ${APP_PATH}/node_modules
+RUN npm install
+
+COPY . $APP_PATH
+
+CMD [ "puma", "--control-url", "tcp://127.0.0.1:3001", "--control-token", "habit_creation" ]
+
+EXPOSE 3000

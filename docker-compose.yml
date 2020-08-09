@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: habit-creation-web
+    build:
+      dockerfile: docker/development/dockerfile
+      context: .
+    image: habit_creation_web
+    user: user
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/project
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    container_name: habit-creation-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+    volumes:
+      - habit-creation-postgres:/var/lib/postgresql/data
+
+  redis:
+    container_name: habit-creation-redis
+    image: redis
+    volumes:
+      - habit-creation-redis:/data
+
+volumes:
+  habit-creation-postgres:
+  habit-creation-redis:
