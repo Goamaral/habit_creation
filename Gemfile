@@ -9,7 +9,7 @@ gem 'dotenv-rails', '~> 2.7', '>= 2.7.6', require: 'dotenv/rails-now', groups: [
 # RAILS #
 gem 'rails', '~> 6.0.3', '>= 6.0.3.4'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 4.3'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'tzinfo-data', '~> 1.2020', '>= 1.2020.4'
 
